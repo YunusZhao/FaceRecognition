@@ -106,12 +106,10 @@ public class ForgetPasswordActivity extends BaseAcctivity implements NavigationV
 
     //验证手机号是否11位
     private boolean isTelLenthLegal(String tel) {
-        //TODO: Replace this with your own logic
         return tel.length() == 11;
     }
     //是否是邮箱
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
         return email.contains("@")&&email.contains(".");
     }
 
@@ -141,7 +139,6 @@ public class ForgetPasswordActivity extends BaseAcctivity implements NavigationV
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
             boolean matchResult = false;
             try {
                 // Simulate network access.

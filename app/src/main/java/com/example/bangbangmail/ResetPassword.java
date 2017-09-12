@@ -115,7 +115,6 @@ public class ResetPassword extends BaseAcctivity implements NavigationView.OnCli
 
     //验证密码长度是否在 6 - 16位
     private boolean isPwdLenthLegal(String pwd) {
-        //TODO: Replace this with your own logic
         return (pwd.length() > 5) && (pwd.length() < 17);
     }
 
@@ -160,7 +159,6 @@ public class ResetPassword extends BaseAcctivity implements NavigationView.OnCli
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
             boolean matchResult = false;
             try {
                 // Simulate network access.

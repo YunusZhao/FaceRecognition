@@ -267,7 +267,6 @@ public class PwdLoginActivity extends BaseAcctivity {
         }
     } */
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
         return email.contains("@")&&email.contains(".");
     }
 
@@ -296,7 +295,6 @@ public class PwdLoginActivity extends BaseAcctivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
             boolean loginres = false;
             try {
                 // Simulate network access.

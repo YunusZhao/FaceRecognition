@@ -1,7 +1,10 @@
 package com.example.bangbangmail;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
+import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +16,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -70,30 +74,7 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.take_pic_btn:
                 picFlag = 0;
-
-                // 获取当前相机参数
-                Camera.Parameters parameters = mCamera.getParameters();
-                // 设置相片格式
-                parameters.setPictureFormat(ImageFormat.JPEG);
-                // 设置预览大小
-                parameters.setPreviewSize(800, 480);
-//                // 设置对焦方式，这里设置自动对焦
-//                parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
-//                mCamera.autoFocus(new Camera.AutoFocusCallback() {
-//
-//                    @Override
-//                    public void onAutoFocus(boolean success, Camera camera) {
-//                        // 判断是否对焦成功
-//                        if (success) {
-//                            // 拍照 第三个参数为拍照回调
-//                            mCamera.takePicture(null, null, pc);
-//                        }
-//                    }
-//                });
-//
-                Log.i(TAG, "BBBBBBBBBBBBBBBBBBBBBB");
                 mCamera.takePicture(null, null, pc);
-
                 SystemClock.sleep(2000);
                 final Handler mHandler=new Handler();
 
@@ -105,7 +86,6 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
                             try {
                                 boolean reFlag = registerNetwork(acount, password, path);
                                 if (reFlag) {
-                                    System.out.println("AAAA" + reFlag);
                                     myFlag = 1;
                                 } else {
                                     myFlag = 2;
@@ -303,7 +283,6 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
                 try {
                     fos.write(data);
                     picFlag = 1;
-                    Log.i(TAG, "AAAAAAAAAAAAAAAAAAAAAAAAA " + data);
                     // 关闭流
                     fos.close();
                     if (mCamera != null) {
@@ -316,6 +295,38 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
             }catch (FileNotFoundException e){
                 e.printStackTrace();
             }
+
+
+//            Bitmap bMap;
+//            try
+//            {// 获得图片
+//
+//
+//                bMap = BitmapFactory.decodeByteArray(data, 0, data.length);
+//
+//                Bitmap bMapRotate;
+//
+//                Matrix matrix = new Matrix();
+////                matrix.reset();
+//
+//                matrix.setRotate(90,(float) bMap.getWidth() / 2, (float) bMap.getHeight() / 2);
+////                final Bitmap bm = Bitmap.createBitmap(bMap, 0, 0, bMap.getWidth(), bMap.getHeight(), matrix, true);
+////
+////                matrix.postRotate(90);
+//                bMapRotate = Bitmap.createBitmap(bMap, 0, 0, bMap.getWidth(), bMap.getHeight(), matrix, true);
+//                bMap = bMapRotate;
+//
+//                // Bitmap bm = BitmapFactory.decodeByteArray(data, 0, data.length);
+//                File file = new File(path);
+//                BufferedOutputStream bos =
+//                        new BufferedOutputStream(new FileOutputStream(file));
+//                bMap.compress(Bitmap.CompressFormat.JPEG, 50, bos);//将图片压缩到流中
+//                bos.flush();//输出
+//                bos.close();//关闭
+//            }catch(Exception e)
+//            {
+//                e.printStackTrace();
+//            }
         }
     };
 

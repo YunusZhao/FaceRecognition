@@ -134,7 +134,6 @@ public class RegisterActivity extends BaseAcctivity implements NavigationView.On
     }
 
     private boolean isTelLenthLegal(String tel) {
-        //TODO: Replace this with your own logic
         return tel.length() == 11;
     }
 
@@ -152,7 +151,6 @@ public class RegisterActivity extends BaseAcctivity implements NavigationView.On
 
     //验证密码长度是否在 6 - 16位
     private boolean isPwdLenthLegal(String pwd) {
-        //TODO: Replace this with your own logic
         return (pwd.length() > 5) && (pwd.length() < 17);
     }
 
@@ -197,7 +195,6 @@ public class RegisterActivity extends BaseAcctivity implements NavigationView.On
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
             boolean registerResult = false;
             try {
                 // Simulate network access.
