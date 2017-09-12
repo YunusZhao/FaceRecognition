@@ -1,4 +1,4 @@
-package com.example.bangbangmail;
+package com.example.FaceRecognition;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.bangbangmail.Util.BaseAcctivity;
+import com.example.FaceRecognition.Util.BaseActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -22,7 +22,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.regex.Pattern;
 
-public class RegisterActivity extends BaseAcctivity implements NavigationView.OnClickListener {
+public class RegisterActivity extends BaseActivity implements NavigationView.OnClickListener {
     private static final String TAG = "RegisterActivity";
     private RegisterTask mAuthTask = null;
     // UI 组件

@@ -1,4 +1,4 @@
-package com.example.bangbangmail;
+package com.example.FaceRecognition;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,10 +6,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.bangbangmail.Util.ActivityController;
-import com.example.bangbangmail.Util.BaseAcctivity;
+import com.example.FaceRecognition.Util.ActivityController;
+import com.example.FaceRecognition.Util.BaseActivity;
 
-public class PersonalActivity extends BaseAcctivity {
+public class PersonalActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

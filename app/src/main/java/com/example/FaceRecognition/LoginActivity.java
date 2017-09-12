@@ -1,4 +1,4 @@
-package com.example.bangbangmail;
+package com.example.FaceRecognition;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,9 +14,10 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
-import com.example.bangbangmail.Util.BaseAcctivity;
+import com.example.FaceRecognition.Util.BaseActivity;
 
-public class LoginActivity extends BaseAcctivity {
+
+public class LoginActivity extends BaseActivity {
     private static final String TAG = "LoginActivity";
 
     // UI 组件

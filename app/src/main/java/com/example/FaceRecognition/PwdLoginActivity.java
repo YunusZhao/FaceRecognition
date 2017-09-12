@@ -1,4 +1,4 @@
-package com.example.bangbangmail;
+package com.example.FaceRecognition;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -11,13 +11,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.bangbangmail.Util.BaseAcctivity;
+import com.example.FaceRecognition.Util.BaseActivity;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -30,7 +29,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class PwdLoginActivity extends BaseAcctivity {
+public class PwdLoginActivity extends BaseActivity {
     private static final String TAG = "LoginActivity";
     private UserLoginTask mAuthTask = null;
 

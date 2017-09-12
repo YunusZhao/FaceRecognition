@@ -1,4 +1,4 @@
-package com.example.bangbangmail;
+package com.example.FaceRecognition;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

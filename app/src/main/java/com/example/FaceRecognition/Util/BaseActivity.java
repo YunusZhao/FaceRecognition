@@ -1,4 +1,4 @@
-package com.example.bangbangmail.Util;
+package com.example.FaceRecognition.Util;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,8 +9,8 @@ import android.util.Log;
  * Created by Kenshin on 2017/5/31.
  */
 
-public class BaseAcctivity extends AppCompatActivity {
-    private static final String TAG = "BaseAcctivity:";
+public class BaseActivity extends AppCompatActivity {
+    private static final String TAG = "BaseActivity:";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

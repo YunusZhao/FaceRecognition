@@ -1,4 +1,4 @@
-package com.example.bangbangmail;
+package com.example.FaceRecognition;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -12,17 +12,17 @@ import android.view.SurfaceView;
  * Created by Kenshin on 2017/7/6.
  */
 
-public class CircleSufaceView extends SurfaceView {
+public class CircleSurfaceView extends SurfaceView {
 
-    public CircleSufaceView(Context context) {
+    public CircleSurfaceView(Context context) {
         super(context);
     }
 
-    public CircleSufaceView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CircleSurfaceView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
-    public CircleSufaceView(Context context, AttributeSet attrs) {
+    public CircleSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 

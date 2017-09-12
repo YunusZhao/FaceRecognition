@@ -1,4 +1,4 @@
-package com.example.bangbangmail.Util;
+package com.example.FaceRecognition.Util;
 
 import android.app.Activity;
 
@@ -24,14 +24,6 @@ public class ActivityController {
     public static void finishAll() {
         for (Activity activity : activityList) {
             if (!activity.isFinishing()) {
-                activity.finish();
-            }
-        }
-    }
-    public static void finishAllButLogin() {
-        for (int i = 1; i < activityList.size(); i++){
-            Activity activity = activityList.get(i);
-            if (!activity.isFinishing() ) {
                 activity.finish();
             }
         }

@@ -16,7 +16,7 @@
 
 
 
-    <com.example.bangbangmail.CircleSufaceView
+    <com.example.FaceRecognition.CircleSurfaceView
         android:id="@+id/sufaceview"
         android:layout_width="300dp"
         android:layout_height="400dp"

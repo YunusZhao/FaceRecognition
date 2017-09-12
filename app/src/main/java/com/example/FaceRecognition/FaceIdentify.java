@@ -1,10 +1,8 @@
-package com.example.bangbangmail;
+package com.example.FaceRecognition;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.ImageFormat;
-import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +13,9 @@ import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
+import com.example.FaceRecognition.Util.CompressJPG;
+import com.example.FaceRecognition.Util.Rotate;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -37,7 +38,7 @@ import java.util.Map;
 
 public class FaceIdentify extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "FaceIdentify";
-    private CircleSufaceView mCircleSufaceView;
+    private CircleSurfaceView mCircleSufaceView;
     //标志位，0代表注册，1代表登录
     private int flag;
     private int picFlag;
@@ -52,7 +53,7 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_face_identify);
-        mCircleSufaceView = (CircleSufaceView) findViewById(R.id.sufaceview);
+        mCircleSufaceView = (CircleSurfaceView) findViewById(R.id.sufaceview);
         takePicBtn = (ImageButton) findViewById(R.id.take_pic_btn);
         takePicBtn.setOnClickListener(this);
         Intent intent = getIntent();
@@ -82,6 +83,9 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
                     int myFlag;
                     @Override
                     public void run() {
+
+
+
                         if (flag == 0) { //注册
                             try {
                                 boolean reFlag = registerNetwork(acount, password, path);
@@ -275,16 +279,50 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
-            // data为完整数据
-            File file = new File(path);
+//            // data为完整数据
+//            File file = new File(path);
+//            // 使用流进行读写
+//            try {
+//                FileOutputStream fos = new FileOutputStream(file);
+//                try {
+//                    fos.write(data);
+//                    picFlag = 1;
+//                    // 关闭流
+//                    fos.close();
+//                    if (mCamera != null) {
+//                        mCamera.release();
+//
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }catch (FileNotFoundException e){
+//                e.printStackTrace();
+//            }
+
+
+            Bitmap bMap;
             // 使用流进行读写
             try {
-                FileOutputStream fos = new FileOutputStream(file);
+                bMap = BitmapFactory.decodeByteArray(data, 0, data.length);
                 try {
-                    fos.write(data);
+                    Bitmap bMapRotate;
+                    bMapRotate = Rotate.rotatePicture(path, bMap);
+                    BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(path));
+                    bMap = bMapRotate;
+                    bMap.compress(Bitmap.CompressFormat.JPEG, 50, bos);//将图片压缩到流中
+                    bos.write(data);
+
+//                    try {
+//                        CompressJPG.Compress(path);
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+
+
                     picFlag = 1;
                     // 关闭流
-                    fos.close();
+                    bos.close();
                     if (mCamera != null) {
                         mCamera.release();
 
@@ -292,7 +330,7 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }catch (FileNotFoundException e){
+            }catch (Exception e){
                 e.printStackTrace();
             }
 
