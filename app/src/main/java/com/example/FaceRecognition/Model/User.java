@@ -6,8 +6,6 @@ package com.example.FaceRecognition.Model;
 
 public class User {
 
-    public static final String Path = "///sdcard/photo.jpg";
-
     private static String account;
     private static String password;
 

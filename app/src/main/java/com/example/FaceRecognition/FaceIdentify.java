@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.FaceRecognition.Model.User;
 import com.example.FaceRecognition.Util.CompressJPG;
+import com.example.FaceRecognition.Util.Constant;
 import com.example.FaceRecognition.Util.NetUtil;
 import com.example.FaceRecognition.Util.Rotate;
 
@@ -80,7 +81,7 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
                     public void run() {
 
                     try {
-                        CompressJPG.Compress(User.Path);
+                        CompressJPG.Compress(Constant.Path);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -88,7 +89,7 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
 
                         if (flag == 0) { //注册
                             try {
-                                boolean reFlag = NetUtil.network(User.getAccount(), User.getPassword(), User.Path, "register");
+                                boolean reFlag = NetUtil.network(User.getAccount(), User.getPassword(), Constant.Path, "register");
                                 if (reFlag) {
                                     myFlag = 1;
                                 } else {
@@ -100,7 +101,7 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
                             }
                         } else { //登录
                             try {
-                                if (NetUtil.network(User.getAccount(), "", User.Path, "loginByPic")) {
+                                if (NetUtil.network(User.getAccount(), "", Constant.Path, "loginByPic")) {
                                     myFlag = 4;
                                 } else {
                                     myFlag = 5;
@@ -163,8 +164,8 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
                 bMap = BitmapFactory.decodeByteArray(data, 0, data.length);
                 try {
                     Bitmap bMapRotate;
-                    bMapRotate = Rotate.rotatePicture(User.Path, bMap);
-                    BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(User.Path));
+                    bMapRotate = Rotate.rotatePicture(Constant.Path, bMap);
+                    BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(Constant.Path));
                     bMap = bMapRotate;
                     bMap.compress(Bitmap.CompressFormat.JPEG, 50, bos);//将图片压缩到流中
                     bos.write(data);

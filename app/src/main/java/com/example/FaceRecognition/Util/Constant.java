@@ -5,9 +5,9 @@ package com.example.FaceRecognition.Util;
  */
 
 public class Constant {
+    public static final String Path = "///sdcard/photo.jpg";
     private static final String IP = "http://59.110.235.173";
     private static final String PORT = "8080";
     public static final String URL = IP + ":" + PORT;
-    private static final int LOGIN_BY_PIC = 1;
 
 }

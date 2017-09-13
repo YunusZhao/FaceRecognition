@@ -71,28 +71,24 @@ public class PwdLoginActivity extends BaseActivity {
         });
     }
 
-    private boolean isEmailValid(String email) {
-        return email.contains("@")&&email.contains(".");
-    }
-
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mEmail;
-        private final String mPassword;
+        private final String account;
+        private final String password;
         ProgressDialog loginProgress = new ProgressDialog(PwdLoginActivity.this);
 
-        UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
+        UserLoginTask(String account, String password) {
+            this.account = account;
+            this.password = password;
         }
 
         @Override
         protected void onPreExecute() {
-            loginProgress.setTitle("你好，" + mEmail);
+            loginProgress.setTitle("你好，" + account);
             loginProgress.setMessage("登录中...");
             loginProgress.setCancelable(true);
             loginProgress.show();
@@ -100,32 +96,30 @@ public class PwdLoginActivity extends BaseActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            boolean loginres = false;
+            boolean loginFlag = false;
             try {
                 // Simulate network access.
-                loginres = NetUtil.network(mEmail, mPassword, "", "loginByPwd");
-                Log.d(TAG, "doInBackground:loginres: " + loginres);
+                loginFlag = NetUtil.network(account, password, "", "loginByPwd");
+                Log.d(TAG, "doInBackground:login: " + loginFlag);
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
-                loginres = false;
+                loginFlag = false;
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return loginres;
+            return loginFlag;
         }
 
 
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
-//            showProgress(false);
             if (success) {
-                Toast.makeText(PwdLoginActivity.this, mEmail + "，登陆成功！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PwdLoginActivity.this, account + "，登陆成功！", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(PwdLoginActivity.this, PersonalActivity.class);
                 startActivity(i);
-                finish();
-
                 loginProgress.dismiss();
+                finish();
             } else {
                 loginProgress.dismiss();
                 Toast.makeText(PwdLoginActivity.this, "登录失败", Toast.LENGTH_LONG).show();
@@ -139,9 +133,7 @@ public class PwdLoginActivity extends BaseActivity {
         protected void onCancelled() {
             mAuthTask = null;
             loginProgress.dismiss();
-//            showProgress(false);
         }
-
     }
 }
 
