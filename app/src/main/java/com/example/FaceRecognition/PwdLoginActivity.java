@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.FaceRecognition.Model.User;
 import com.example.FaceRecognition.Util.BaseActivity;
+import com.example.FaceRecognition.Util.NetUtil;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -70,161 +71,6 @@ public class PwdLoginActivity extends BaseActivity {
         });
     }
 
-    public static boolean loginNetwork(String usr,String pwd) throws FileNotFoundException {
-        String urlStr = "http://59.110.235.173:8080/app/lodinByPwd ";
-        Map<String, String> textMap = new HashMap<>();
-        textMap.put("name", usr);
-        textMap.put("password", pwd);
-        String ret = formUpload(urlStr, textMap, null);
-        System.out.println(ret);
-        if(ret.equals("success"))
-            return true;
-        else
-            return false;
-    }
-
-    public static String formUpload(String urlStr, Map<String, String> textMap, Map<String, InputStream> fileMap) {
-        String res = "";
-        HttpURLConnection conn = null;
-        String BOUNDARY = "---------------------------123821742118716";
-        try {
-            URL url = new URL(urlStr);
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setConnectTimeout(5000);
-            conn.setReadTimeout(30000);
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-            conn.setUseCaches(false);
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Connection", "Keep-Alive");
-            conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 6.1; zh-CN; rv:1.9.2.6)");
-            conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
-            OutputStream out = new DataOutputStream(conn.getOutputStream());
-            //
-            if (textMap != null) {
-                StringBuffer strBuf = new StringBuffer();
-                Iterator<Map.Entry<String, String>> iter = textMap.entrySet().iterator();
-                while (iter.hasNext()) {
-                    Map.Entry<String, String> entry = iter.next();
-                    String inputName = (String) entry.getKey();
-                    String inputValue = (String) entry.getValue();
-                    if (inputValue == null) {
-                        continue;
-                    }
-                    strBuf.append("\r\n").append("--").append(BOUNDARY).append("\r\n");
-                    strBuf.append("Content-Disposition: form-data; name=\"" + inputName + "\"\r\n\r\n");
-                    strBuf.append(inputValue);
-                }
-                out.write(strBuf.toString().getBytes());
-                System.out.println(strBuf);
-            }
-            // file
-
-            if (fileMap != null) {
-                Iterator<Map.Entry<String, InputStream>> iter = fileMap.entrySet().iterator();
-                while (iter.hasNext()) {
-                    Map.Entry<String, InputStream> entry = iter.next();
-                    String inputName = (String) entry.getKey();
-                    FileInputStream inputValue =   (FileInputStream) entry.getValue();
-                    if (inputValue == null) {
-                        continue;
-                    }
-                    String filename = System.currentTimeMillis()+".jpg";
-                    String contentType = "image/png";
-                    StringBuffer strBuf = new StringBuffer();
-                    strBuf.append("\r\n").append("--").append(BOUNDARY).append("\r\n");
-                    strBuf.append("Content-Disposition: form-data; name=\"" + inputName + "\"; filename=\"" + filename + "\"\r\n");
-                    strBuf.append("Content-Type:" + contentType + "\r\n\r\n");
-                    out.write(strBuf.toString().getBytes());
-                    DataInputStream in = new DataInputStream(inputValue);
-                    int bytes = 0;
-                    byte[] bufferOut = new byte[1024];
-                    while ((bytes = in.read(bufferOut)) != -1) {
-                        out.write(bufferOut, 0, bytes);
-                    }
-                    in.close();
-                }
-            }
-            byte[] endData = ("\r\n--" + BOUNDARY + "--\r\n").getBytes();
-            out.write(endData);
-            out.flush();
-            out.close();
-            // 接收数据
-            StringBuffer strBuf = new StringBuffer();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String line = null;
-            while ((line = reader.readLine()) != null) {
-                strBuf.append(line);
-            }
-            res = strBuf.toString();
-            reader.close();
-            reader = null;
-        } catch (Exception e) {
-            System.out.println("error" + urlStr);
-            e.printStackTrace();
-        } finally {
-            if (conn != null) {
-                conn.disconnect();
-                conn = null;
-            }
-        }
-        return res;
-    }
-
-
-
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
-     /*
-    private void attemptLogin() {
-        if (mAuthTask != null) {
-            return;
-        }
-
-        // Reset errors.
-        mEmailView.setError(null);
-        mPasswordView.setError(null);
-
-        // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
-
-        boolean cancel = false;
-        View focusView = null;
-
-        // Check for a valid password, if the user entered one.
-        if (TextUtils.isEmpty(password)) {
-            mPasswordView.setError("请输入密码");
-            focusView = mPasswordView;
-            cancel = true;
-        }
-
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mEmailView.setError("请输入邮箱");
-            focusView = mEmailView;
-            cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError("输入正确的邮箱");
-            focusView = mEmailView;
-            cancel = true;
-        }
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-//            showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
-        }
-    } */
     private boolean isEmailValid(String email) {
         return email.contains("@")&&email.contains(".");
     }
@@ -257,7 +103,7 @@ public class PwdLoginActivity extends BaseActivity {
             boolean loginres = false;
             try {
                 // Simulate network access.
-                loginres = loginNetwork(mEmail, mPassword);
+                loginres = NetUtil.network(mEmail, mPassword, "", "loginByPwd");
                 Log.d(TAG, "doInBackground:loginres: " + loginres);
                 Thread.sleep(2000);
             } catch (InterruptedException e) {

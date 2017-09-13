@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.FaceRecognition.Model.User;
 import com.example.FaceRecognition.Util.CompressJPG;
+import com.example.FaceRecognition.Util.NetUtil;
 import com.example.FaceRecognition.Util.Rotate;
 
 import java.io.BufferedOutputStream;
@@ -87,7 +88,7 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
 
                         if (flag == 0) { //注册
                             try {
-                                boolean reFlag = registerNetwork(User.getAccount(), User.getPassword(), User.Path);
+                                boolean reFlag = NetUtil.network(User.getAccount(), User.getPassword(), User.Path, "register");
                                 if (reFlag) {
                                     myFlag = 1;
                                 } else {
@@ -99,7 +100,7 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
                             }
                         } else { //登录
                             try {
-                                if (loginNetwork(User.getAccount(), User.Path)) {
+                                if (NetUtil.network(User.getAccount(), "", User.Path, "loginByPic")) {
                                     myFlag = 4;
                                 } else {
                                     myFlag = 5;
@@ -150,127 +151,6 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
-
-    public static boolean registerNetwork(String usr,String pwd,String filepath) throws FileNotFoundException{
-        // String filepath = "C:\\Users\\lenovo idea\\Desktop\\liuwenwu.JPG";
-        String urlStr = "http://59.110.235.173:8080/app/register ";
-        Map<String, String> textMap = new HashMap<>();
-        textMap.put("name", usr);
-        textMap.put("password", pwd);
-        Map<String, InputStream> fileMap = new HashMap<>();
-        fileMap.put("userfile", new FileInputStream(new File(filepath)) );
-        String ret = formUpload(urlStr, textMap, fileMap);
-        System.out.println(ret);
-        if(ret.equals("success"))
-            return true;
-        else
-            return false;
-    }
-
-    public static boolean loginNetwork(String usr,String filepath) throws FileNotFoundException{
-        // String filepath = "C:\\Users\\lenovo idea\\Desktop\\liuwenwu.JPG";
-        String urlStr = "http://59.110.235.173:8080/app/loginByPic ";
-        Map<String, String> textMap = new HashMap<>();
-        textMap.put("name", usr);
-        Map<String, InputStream> fileMap = new HashMap<>();
-        fileMap.put("userfile", new FileInputStream(new File(filepath)) );
-        String ret = formUpload(urlStr, textMap, fileMap);
-        System.out.println(ret);
-        if(ret.equals("success"))
-            return true;
-        else
-            return false;
-    }
-
-    public static String formUpload(String urlStr, Map<String, String> textMap, Map<String, InputStream> fileMap) {
-        String res = "";
-        HttpURLConnection conn = null;
-        String BOUNDARY = "---------------------------123821742118716";
-        try {
-            URL url = new URL(urlStr);
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setConnectTimeout(5000);
-            conn.setReadTimeout(30000);
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-            conn.setUseCaches(false);
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Connection", "Keep-Alive");
-            conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 6.1; zh-CN; rv:1.9.2.6)");
-            conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
-            OutputStream out = new DataOutputStream(conn.getOutputStream());
-            //
-            if (textMap != null) {
-                StringBuffer strBuf = new StringBuffer();
-                Iterator<Map.Entry<String, String>> iter = textMap.entrySet().iterator();
-                while (iter.hasNext()) {
-                    Map.Entry<String, String> entry = iter.next();
-                    String inputName = (String) entry.getKey();
-                    String inputValue = (String) entry.getValue();
-                    if (inputValue == null) {
-                        continue;
-                    }
-                    strBuf.append("\r\n").append("--").append(BOUNDARY).append("\r\n");
-                    strBuf.append("Content-Disposition: form-data; name=\"" + inputName + "\"\r\n\r\n");
-                    strBuf.append(inputValue);
-                }
-                out.write(strBuf.toString().getBytes());
-                System.out.println(strBuf);
-            }
-            // file
-
-            if (fileMap != null) {
-                Iterator<Map.Entry<String, InputStream>> iter = fileMap.entrySet().iterator();
-                while (iter.hasNext()) {
-                    Map.Entry<String, InputStream> entry = iter.next();
-                    String inputName = (String) entry.getKey();
-                    FileInputStream inputValue =   (FileInputStream) entry.getValue();
-                    if (inputValue == null) {
-                        continue;
-                    }
-                    String filename = System.currentTimeMillis()+".jpg";
-                    String contentType = "image/png";
-                    StringBuffer strBuf = new StringBuffer();
-                    strBuf.append("\r\n").append("--").append(BOUNDARY).append("\r\n");
-                    strBuf.append("Content-Disposition: form-data; name=\"" + inputName + "\"; filename=\"" + filename + "\"\r\n");
-                    strBuf.append("Content-Type:" + contentType + "\r\n\r\n");
-                    out.write(strBuf.toString().getBytes());
-                    DataInputStream in = new DataInputStream(inputValue);
-                    int bytes = 0;
-                    byte[] bufferOut = new byte[1024];
-                    while ((bytes = in.read(bufferOut)) != -1) {
-                        out.write(bufferOut, 0, bytes);
-                    }
-                    in.close();
-                }
-            }
-            byte[] endData = ("\r\n--" + BOUNDARY + "--\r\n").getBytes();
-            out.write(endData);
-            out.flush();
-            out.close();
-            // 接收数据
-            StringBuffer strBuf = new StringBuffer();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String line = null;
-            while ((line = reader.readLine()) != null) {
-                strBuf.append(line);
-            }
-            res = strBuf.toString();
-            reader.close();
-            reader = null;
-        } catch (Exception e) {
-            System.out.println("error" + urlStr);
-            e.printStackTrace();
-        } finally {
-            if (conn != null) {
-                conn.disconnect();
-                conn = null;
-            }
-        }
-        return res;
-    }
-
-
 
     private Camera.PictureCallback pc = new Camera.PictureCallback() {
 
