@@ -34,7 +34,8 @@ public class CircleSurfaceView extends SurfaceView {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(15);
         Path path = new Path();
-        path.addCircle(this.getWidth() / 2, this.getHeight() / 2, this.getWidth() / 2 - 15, Path.Direction.CCW );
+        path.addCircle(this.getWidth() / 2, this.getHeight() / 2, this.getWidth() / 2 - 15,
+                Path.Direction.CCW );
         //描边
         canvas.drawPath(path, paint);
         //裁剪画布

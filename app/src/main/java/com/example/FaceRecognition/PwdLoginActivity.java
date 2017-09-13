@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.FaceRecognition.Model.User;
 import com.example.FaceRecognition.Util.BaseActivity;
 
 import java.io.BufferedReader;
@@ -34,9 +35,8 @@ public class PwdLoginActivity extends BaseActivity {
     private UserLoginTask mAuthTask = null;
 
     // UI 组件
-    private EditText acountText;
+    private EditText accountText;
     private EditText passwordText;
-    private String pwd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,18 +44,16 @@ public class PwdLoginActivity extends BaseActivity {
         setContentView(R.layout.activity_pwd_login);
 
         // Set up the login form.
-        acountText = (EditText) findViewById(R.id.acount);
+        accountText = (EditText) findViewById(R.id.acount);
         passwordText = (EditText) findViewById(R.id.password);
 
-        Intent intent = getIntent();
-        final String acount = intent.getStringExtra("ACOUNT");
-        Log.d(TAG, "onCreate: " + acount);
-        acountText.setText(acount);
+        Log.d(TAG, "onCreate: " + User.getAccount());
+        accountText.setText(User.getAccount());
 
-        acountText.setOnTouchListener(new View.OnTouchListener() {
+        accountText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                acountText.setFocusableInTouchMode(true);
+                accountText.setFocusableInTouchMode(true);
                 return false;
             }
         });
@@ -65,52 +63,14 @@ public class PwdLoginActivity extends BaseActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pwd = passwordText.getText().toString();
-                try {
-                    if (loginNetwork(acount, pwd)) {
-                        Toast.makeText(PwdLoginActivity.this, acount + "，登陆成功！", Toast.LENGTH_SHORT).show();
-                        Intent i = new Intent(PwdLoginActivity.this, PersonalActivity.class);
-                        i.putExtra("ACOUNT", acount);
-                        startActivity(i);
-                        finish();
-                    } else {
-                        Toast.makeText(PwdLoginActivity.this, acount + "，登陆失败！", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (FileNotFoundException e) {
-                    Toast.makeText(PwdLoginActivity.this, acount + "，登陆失败！文件未找到", Toast.LENGTH_SHORT).show();
-                    e.printStackTrace();
-                }
-                Intent i = new Intent(PwdLoginActivity.this, LoginActivity.class);
-                startActivity(i);
-                finish();
-
-
-//                Intent intent = new Intent(PwdLoginActivity.this, PersonalActivity.class);
-//                intent.putExtra("ACOUNT", acount);
-//                startActivity(intent);
-//                attemptLogin();
+                User.setPassword(passwordText.getText().toString());
+                mAuthTask = new UserLoginTask(User.getAccount(), User.getPassword());
+                mAuthTask.execute();
             }
         });
-//       Button forget_password_button = (Button)findViewById(R.id.forget_password);
-//                forget_password_button.setOnClickListener(new OnClickListener(){
-//                    @Override
-//                    public void onClick(View v) {
-//                        Intent intent = new Intent(LoginActivity.this,ForgetPasswordActivity.class);
-//                        startActivity(intent);
-//                    }
-//                });
-//                Button register_button =(Button)findViewById(R.id.register_button);
-//                register_button.setOnClickListener(new OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        Intent intent = new Intent(LoginActivity.this,RegisterActivity.class);
-//                        startActivity(intent);
-//            }
-//        });
     }
 
     public static boolean loginNetwork(String usr,String pwd) throws FileNotFoundException {
-        // String filepath = "C:\\Users\\lenovo idea\\Desktop\\liuwenwu.JPG";
         String urlStr = "http://59.110.235.173:8080/app/lodinByPwd ";
         Map<String, String> textMap = new HashMap<>();
         textMap.put("name", usr);
@@ -286,7 +246,7 @@ public class PwdLoginActivity extends BaseActivity {
 
         @Override
         protected void onPreExecute() {
-//            loginProgress.setTitle("你好，" + mEmail);
+            loginProgress.setTitle("你好，" + mEmail);
             loginProgress.setMessage("登录中...");
             loginProgress.setCancelable(true);
             loginProgress.show();
@@ -297,41 +257,35 @@ public class PwdLoginActivity extends BaseActivity {
             boolean loginres = false;
             try {
                 // Simulate network access.
-                loginres = loginByPost(mEmail, mPassword);
+                loginres = loginNetwork(mEmail, mPassword);
                 Log.d(TAG, "doInBackground:loginres: " + loginres);
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 loginres = false;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             return loginres;
         }
 
-        /*
+
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
 //            showProgress(false);
             if (success) {
-                editor = pref.edit();
-                if (rememberPwd.isChecked()) {
-                    editor.putBoolean("remember_password", true);
-                    editor.putString("mail", mEmail);
-                    editor.putString("password", mPassword);
-                } else {
-                    editor.clear();
-                }
-                editor.apply();
-                Log.d(TAG, "当前用户: " + mEmail);
-                FishMailApplication.setMail(mEmail);
-                FishMailApplication.setPwd(mPassword);
-                Log.d(TAG, "当前用户: " + FishMailApplication.getMail());
-                Intent intent = new Intent(PwdLoginActivity.this,PwdLoginActivity.class);
-                startActivity(intent);
+                Toast.makeText(PwdLoginActivity.this, mEmail + "，登陆成功！", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(PwdLoginActivity.this, PersonalActivity.class);
+                startActivity(i);
                 finish();
+
                 loginProgress.dismiss();
             } else {
                 loginProgress.dismiss();
                 Toast.makeText(PwdLoginActivity.this, "登录失败", Toast.LENGTH_LONG).show();
+                Intent i = new Intent(PwdLoginActivity.this, LoginActivity.class);
+                startActivity(i);
+                finish();
             }
         }
 
@@ -341,64 +295,7 @@ public class PwdLoginActivity extends BaseActivity {
             loginProgress.dismiss();
 //            showProgress(false);
         }
-    }
-    */
 
-        /*
-        *   发送http请求验证用户名、密码
-        *   @return boolean
-        */
-        private boolean loginByPost(String mail, String passwd) {
-            boolean signal = false;
-            try {
-                Log.d("loginByPost", "try to login");
-                Log.d(TAG, "loginByPost: " + mail + "-" + passwd);
-                URL url = new URL("http://120.77.168.57:9090/FishMail/UserLoginServlet");
-//            URL url = new URL("http://101.201.69.120:8080/HealthGuardian/Validate.do");
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("POST");
-                urlConnection.setReadTimeout(5000);
-                urlConnection.setConnectTimeout(5000);
-                //传递数据
-                String data = "mail=" + URLEncoder.encode(mail, "UTF-8")
-                        + "&password=" + URLEncoder.encode(passwd, "UTF-8");
-                Log.d(TAG, "loginByPost: date:" + data);
-                urlConnection.setRequestProperty("Connection", "keep-alive");
-                urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                urlConnection.setRequestProperty("Content-Length", String.valueOf(data.getBytes().length));
-                urlConnection.setDoInput(true);
-                urlConnection.setDoOutput(true);
-
-                //获取输出流
-                OutputStream os = urlConnection.getOutputStream();
-                os.write(data.getBytes());
-                os.flush();
-                //接收报文
-                if (urlConnection.getResponseCode() == 200) {
-                    InputStream is = urlConnection.getInputStream();
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    int len = 0;
-                    byte buffer[] = new byte[1024];
-                    while ((len = is.read(buffer)) != -1) {
-                        baos.write(buffer, 0, len);
-                    }
-                    is.close();
-                    baos.close();
-                    final String res = new String(baos.toByteArray());
-                    if (res.equals("true")) {
-                        signal = true;
-                    } else {
-                        signal = false;
-                    }
-                } else {
-                    Log.d(TAG, "loginByPost: 状态码：" + urlConnection.getResponseCode());
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            Log.d(TAG, "loginByPost: signal:" + signal);
-            return signal;
-        }
     }
 }
 

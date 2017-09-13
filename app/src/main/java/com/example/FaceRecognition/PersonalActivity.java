@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.FaceRecognition.Model.User;
 import com.example.FaceRecognition.Util.ActivityController;
 import com.example.FaceRecognition.Util.BaseActivity;
 
@@ -21,9 +22,7 @@ public class PersonalActivity extends BaseActivity {
         Button logoutBtn = (Button) findViewById(R.id.logout);
         Button exitBtn = (Button) findViewById(R.id.exit_app);
 
-        final Intent intent = getIntent();
-        final String acount = intent.getStringExtra("ACOUNT");
-        helloText.setText("你好，" + acount);
+        helloText.setText("你好，" + User.getAccount());
 
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override

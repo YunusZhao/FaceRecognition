@@ -1,5 +1,7 @@
 package com.example.FaceRecognition;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,6 +16,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.example.FaceRecognition.Model.User;
 import com.example.FaceRecognition.Util.CompressJPG;
 import com.example.FaceRecognition.Util.Rotate;
 
@@ -38,35 +41,26 @@ import java.util.Map;
 
 public class FaceIdentify extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "FaceIdentify";
-    private CircleSurfaceView mCircleSufaceView;
+    private CircleSurfaceView mCircleSurfaceView;
     //标志位，0代表注册，1代表登录
     private int flag;
-    private int picFlag;
-    private String acount;      //账户
-    private String password;    //密码
     private ImageButton takePicBtn;
     private SurfaceHolder surfaceHolder;
     private Camera mCamera;
-    private String path = "///sdcard/photo.jpg";
+    private Dialog m_Dialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_face_identify);
-        mCircleSufaceView = (CircleSurfaceView) findViewById(R.id.sufaceview);
+        mCircleSurfaceView = (CircleSurfaceView) findViewById(R.id.sufaceview);
         takePicBtn = (ImageButton) findViewById(R.id.take_pic_btn);
         takePicBtn.setOnClickListener(this);
         Intent intent = getIntent();
         flag = intent.getIntExtra("FLAG", 1);
-        Log.d(TAG, "onCreate: Falg = " + flag);
-        
-        if (flag == 0) { //注册
-            acount = intent.getStringExtra("ACOUNT");
-            password = intent.getStringExtra("PASSWORD");
-        } else {  //登录
-            acount = intent.getStringExtra("ACOUNT");
-        }
-        surfaceHolder = mCircleSufaceView.getHolder();
+        Log.d(TAG, "onCreate: Flag = " + flag);
+        surfaceHolder = mCircleSurfaceView.getHolder();
         initListener();
     }
 
@@ -74,7 +68,7 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.take_pic_btn:
-                picFlag = 0;
+                m_Dialog= ProgressDialog.show(FaceIdentify.this, "提示...", "请稍后...",true);
                 mCamera.takePicture(null, null, pc);
                 SystemClock.sleep(2000);
                 final Handler mHandler=new Handler();
@@ -84,11 +78,16 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void run() {
 
+                    try {
+                        CompressJPG.Compress(User.Path);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
 
                         if (flag == 0) { //注册
                             try {
-                                boolean reFlag = registerNetwork(acount, password, path);
+                                boolean reFlag = registerNetwork(User.getAccount(), User.getPassword(), User.Path);
                                 if (reFlag) {
                                     myFlag = 1;
                                 } else {
@@ -100,7 +99,7 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
                             }
                         } else { //登录
                             try {
-                                if (loginNetwork(acount, path)) {
+                                if (loginNetwork(User.getAccount(), User.Path)) {
                                     myFlag = 4;
                                 } else {
                                     myFlag = 5;
@@ -117,35 +116,33 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
                                 public void run() {
                                     switch (myFlag) {
                                         case 1 :
-                                            Toast.makeText(FaceIdentify.this, acount + "，注册成功！", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(FaceIdentify.this, "，注册成功！", Toast.LENGTH_SHORT).show();
                                             break;
                                         case 2 :
-                                            Toast.makeText(FaceIdentify.this, acount + "，注册失败！", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(FaceIdentify.this, "，注册失败！", Toast.LENGTH_SHORT).show();
                                             break;
                                         case 3 :
-                                            Toast.makeText(FaceIdentify.this, acount + "，注册失败！文件未找到", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(FaceIdentify.this, "，注册失败！文件未找到", Toast.LENGTH_SHORT).show();
                                             break;
                                         case 4 :
-                                            Toast.makeText(FaceIdentify.this, acount + "，登陆成功！", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(FaceIdentify.this, "，登陆成功！", Toast.LENGTH_SHORT).show();
                                             Intent i = new Intent(FaceIdentify.this, PersonalActivity.class);
-                                            i.putExtra("ACOUNT", acount);
                                             startActivity(i);
                                             finish();
                                             break;
                                         case 5 :
-                                            Toast.makeText(FaceIdentify.this, acount + "，登陆失败！", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(FaceIdentify.this, "，登陆失败！", Toast.LENGTH_SHORT).show();
                                             break;
                                         case 6 :
-                                            Toast.makeText(FaceIdentify.this, acount + "，登陆失败！文件未找到", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(FaceIdentify.this, "，登陆失败！文件未找到", Toast.LENGTH_SHORT).show();
                                             break;
                                     }
                                 }
                             });
                             Intent i = new Intent(FaceIdentify.this, LoginActivity.class);
-                            i.putExtra("ACOUNT", acount);
                             startActivity(i);
                             finish();
-
+                        m_Dialog.dismiss();
                     }
                 }).start();
 
@@ -172,7 +169,7 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
 
     public static boolean loginNetwork(String usr,String filepath) throws FileNotFoundException{
         // String filepath = "C:\\Users\\lenovo idea\\Desktop\\liuwenwu.JPG";
-        String urlStr = "http://59.110.235.173:8080/app/lodinByPic ";
+        String urlStr = "http://59.110.235.173:8080/app/loginByPic ";
         Map<String, String> textMap = new HashMap<>();
         textMap.put("name", usr);
         Map<String, InputStream> fileMap = new HashMap<>();
@@ -279,27 +276,6 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
-//            // data为完整数据
-//            File file = new File(path);
-//            // 使用流进行读写
-//            try {
-//                FileOutputStream fos = new FileOutputStream(file);
-//                try {
-//                    fos.write(data);
-//                    picFlag = 1;
-//                    // 关闭流
-//                    fos.close();
-//                    if (mCamera != null) {
-//                        mCamera.release();
-//
-//                    }
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }catch (FileNotFoundException e){
-//                e.printStackTrace();
-//            }
-
 
             Bitmap bMap;
             // 使用流进行读写
@@ -307,20 +283,11 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
                 bMap = BitmapFactory.decodeByteArray(data, 0, data.length);
                 try {
                     Bitmap bMapRotate;
-                    bMapRotate = Rotate.rotatePicture(path, bMap);
-                    BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(path));
+                    bMapRotate = Rotate.rotatePicture(User.Path, bMap);
+                    BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(User.Path));
                     bMap = bMapRotate;
                     bMap.compress(Bitmap.CompressFormat.JPEG, 50, bos);//将图片压缩到流中
                     bos.write(data);
-
-//                    try {
-//                        CompressJPG.Compress(path);
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-
-
-                    picFlag = 1;
                     // 关闭流
                     bos.close();
                     if (mCamera != null) {
@@ -333,38 +300,6 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
             }catch (Exception e){
                 e.printStackTrace();
             }
-
-
-//            Bitmap bMap;
-//            try
-//            {// 获得图片
-//
-//
-//                bMap = BitmapFactory.decodeByteArray(data, 0, data.length);
-//
-//                Bitmap bMapRotate;
-//
-//                Matrix matrix = new Matrix();
-////                matrix.reset();
-//
-//                matrix.setRotate(90,(float) bMap.getWidth() / 2, (float) bMap.getHeight() / 2);
-////                final Bitmap bm = Bitmap.createBitmap(bMap, 0, 0, bMap.getWidth(), bMap.getHeight(), matrix, true);
-////
-////                matrix.postRotate(90);
-//                bMapRotate = Bitmap.createBitmap(bMap, 0, 0, bMap.getWidth(), bMap.getHeight(), matrix, true);
-//                bMap = bMapRotate;
-//
-//                // Bitmap bm = BitmapFactory.decodeByteArray(data, 0, data.length);
-//                File file = new File(path);
-//                BufferedOutputStream bos =
-//                        new BufferedOutputStream(new FileOutputStream(file));
-//                bMap.compress(Bitmap.CompressFormat.JPEG, 50, bos);//将图片压缩到流中
-//                bos.flush();//输出
-//                bos.close();//关闭
-//            }catch(Exception e)
-//            {
-//                e.printStackTrace();
-//            }
         }
     };
 

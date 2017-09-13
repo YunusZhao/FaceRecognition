@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.FaceRecognition.Model.User;
 import com.example.FaceRecognition.Util.BaseActivity;
 
 import java.io.ByteArrayOutputStream;
@@ -48,10 +49,8 @@ public class RegisterActivity extends BaseActivity implements NavigationView.OnC
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(RegisterActivity.this, FaceIdentify.class);
-                final String acount = usernameText.getText().toString();
-                final String password = mPasswordView.getText().toString();
-                intent.putExtra("ACOUNT", acount);
-                intent.putExtra("PASSWORD", password);
+                User.setAccount(usernameText.getText().toString());
+                User.setPassword(mPasswordView.getText().toString());
                 intent.putExtra("FLAG", 0);
                 startActivity(intent);
             }
