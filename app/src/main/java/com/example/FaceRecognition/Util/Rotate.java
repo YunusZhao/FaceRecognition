@@ -25,7 +25,7 @@ public class Rotate {
         /**
          * 把图片旋转为正的方
          */
-        bitmap = Rotate.rotaingImageView(-90.0f, bitmap);
+        bitmap = Rotate.rotatingImageView(-90.0f, bitmap);
         return bitmap;
     }
     /**
@@ -34,7 +34,7 @@ public class Rotate {
      * @param bitmap
      * @return Bitmap
      */
-    public static Bitmap rotaingImageView(float angle , Bitmap bitmap) {
+    public static Bitmap rotatingImageView(float angle , Bitmap bitmap) {
         //旋转图片 动作
         Matrix matrix = new Matrix();;
         matrix.setRotate(angle);

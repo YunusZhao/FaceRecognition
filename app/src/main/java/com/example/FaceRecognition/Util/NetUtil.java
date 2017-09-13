@@ -28,7 +28,9 @@ public class NetUtil {
         textMap.put("name", account);
         textMap.put("password", password);
         Map<String, InputStream> fileMap = new HashMap<>();
-        fileMap.put("userfile", new FileInputStream(new File(filepath)) );
+        if (filepath != null) {
+            fileMap.put("userfile", new FileInputStream(new File(filepath)) );
+        }
         String ret = formUpload(urlStr, textMap, fileMap);
         System.out.println(ret);
         if(ret.equals("success")) {
