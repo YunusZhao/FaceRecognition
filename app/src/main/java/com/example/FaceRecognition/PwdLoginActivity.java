@@ -99,7 +99,7 @@ public class PwdLoginActivity extends BaseActivity {
             boolean loginFlag = false;
             try {
                 // Simulate network access.
-                loginFlag = loginNetwork(account, password);
+                loginFlag = NetUtil.loginNetwork(account, password);
                 Log.d(TAG, "doInBackground:login: " + loginFlag);
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
@@ -134,58 +134,6 @@ public class PwdLoginActivity extends BaseActivity {
             mAuthTask = null;
             loginProgress.dismiss();
         }
-    }
-
-    private boolean loginNetwork(String mail, String passwd) {
-        boolean signal = false;
-        try {
-            Log.d("loginByPost", "try to login");
-            Log.d(TAG, "loginByPost: " + mail + "-" + passwd);
-            URL url = new URL("http://59.110.235.173:8080/app/loginByPwd");
-//            URL url = new URL("http://101.201.69.120:8080/HealthGuardian/Validate.do");
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("POST");
-            urlConnection.setReadTimeout(5000);
-            urlConnection.setConnectTimeout(5000);
-            //传递数据
-            String data = "mail=" + URLEncoder.encode(mail, "UTF-8")
-                    + "&password=" + URLEncoder.encode(passwd, "UTF-8");
-            Log.d(TAG, "loginByPost: date:" + data);
-            urlConnection.setRequestProperty("Connection", "keep-alive");
-            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            urlConnection.setRequestProperty("Content-Length", String.valueOf(data.getBytes().length));
-            urlConnection.setDoInput(true);
-            urlConnection.setDoOutput(true);
-
-            //获取输出流
-            OutputStream os = urlConnection.getOutputStream();
-            os.write(data.getBytes());
-            os.flush();
-            //接收报文
-            if (urlConnection.getResponseCode() == 200) {
-                InputStream is = urlConnection.getInputStream();
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                int len = 0;
-                byte buffer[] = new byte[1024];
-                while ((len = is.read(buffer)) != -1) {
-                    baos.write(buffer, 0, len);
-                }
-                is.close();
-                baos.close();
-                final String res = new String(baos.toByteArray());
-                if (res.equals("true")) {
-                    signal = true;
-                } else {
-                    signal = false;
-                }
-            } else {
-                Log.d(TAG, "loginByPost: 状态码：" + urlConnection.getResponseCode());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        Log.d(TAG, "loginByPost: signal:" + signal);
-        return signal;
     }
 }
 

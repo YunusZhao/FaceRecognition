@@ -71,6 +71,13 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.take_pic_btn:
                 m_Dialog= ProgressDialog.show(FaceIdentify.this, "提示...", "请稍后...",true);
+                File dirFile = new File(Constant.Path);
+                //检测图片是否存在
+                System.out.println("AAAAAAAAAA");
+                if(dirFile.exists()){
+                    dirFile.delete();  //删除原图片
+                    System.out.println("AAAAAAAAAABBBBBBBB");
+                }
                 mCamera.takePicture(null, null, pc);
                 SystemClock.sleep(2000);
                 final Handler mHandler=new Handler();
@@ -79,6 +86,7 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
                     int myFlag;
                     @Override
                     public void run() {
+                        SystemClock.sleep(2000);
 
                         try {
                             CompressJPG.Compress(Constant.Path);
@@ -217,7 +225,7 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
                 bMap = BitmapFactory.decodeByteArray(data, 0, data.length);
                 try {
                     Bitmap bMapRotate;
-                    bMapRotate = Rotate.rotatePicture(Constant.Path, bMap);
+                    bMapRotate = Rotate.rotatingImageView(bMap);
                     BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(Constant.Path));
                     bMap = bMapRotate;
                     bMap.compress(Bitmap.CompressFormat.JPEG, 50, bos);//将图片压缩到流中

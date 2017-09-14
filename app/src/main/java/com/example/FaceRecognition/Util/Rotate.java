@@ -23,22 +23,21 @@ public class Rotate {
         //Bitmap cameraBitmap = BitmapFactory.decodeFile(pathname, bitmapOptions);
         //bitmap = cameraBitmap;
         /**
-         * 把图片旋转为正的方
+         * 把图片旋转为正的方法
          */
-        bitmap = Rotate.rotatingImageView(-90.0f, bitmap);
+        bitmap = Rotate.rotatingImageView(bitmap);
         return bitmap;
     }
     /**
      * 旋转图片
-     * @param angle
      * @param bitmap
      * @return Bitmap
      */
-    public static Bitmap rotatingImageView(float angle , Bitmap bitmap) {
+    public static Bitmap rotatingImageView(Bitmap bitmap) {
         //旋转图片 动作
-        Matrix matrix = new Matrix();;
-        matrix.setRotate(angle);
-        System.out.println("angle2=" + angle);
+        Matrix matrix = new Matrix();
+        matrix.setRotate(-90.0f);
+        System.out.println("angle2=" + -90.0f);
         // 创建新的图片
         Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0,
                 bitmap.getWidth(), bitmap.getHeight(), matrix, true);

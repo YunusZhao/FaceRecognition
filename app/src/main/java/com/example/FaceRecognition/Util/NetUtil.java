@@ -1,6 +1,9 @@
 package com.example.FaceRecognition.Util;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -11,6 +14,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -126,5 +130,51 @@ public class NetUtil {
             }
         }
         return res;
+    }
+
+    public static boolean loginNetwork(String account, String password) {
+        boolean signal = false;
+        try {
+
+            URL url = new URL("http://59.110.235.173:8080/app/loginByPwd");
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setReadTimeout(5000);
+            urlConnection.setConnectTimeout(5000);
+            //传递数据
+            String data = "name=" + URLEncoder.encode(account, "UTF-8")
+                    + "&password=" + URLEncoder.encode(password, "UTF-8");
+            urlConnection.setRequestProperty("Connection", "keep-alive");
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            urlConnection.setRequestProperty("Content-Length", String.valueOf(data.getBytes().length));
+            urlConnection.setDoInput(true);
+            urlConnection.setDoOutput(true);
+
+            //获取输出流
+            OutputStream os = urlConnection.getOutputStream();
+            os.write(data.getBytes());
+            os.flush();
+            //接收报文
+            if (urlConnection.getResponseCode() == 200) {
+                InputStream is = urlConnection.getInputStream();
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                int len = 0;
+                byte buffer[] = new byte[1024];
+                while ((len = is.read(buffer)) != -1) {
+                    baos.write(buffer, 0, len);
+                }
+                is.close();
+                baos.close();
+                final String res = new String(baos.toByteArray());
+                if (res.equals("success")) {
+                    signal = true;
+                } else {
+                    signal = false;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return signal;
     }
 }
