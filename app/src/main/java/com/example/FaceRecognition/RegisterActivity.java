@@ -105,16 +105,9 @@ public class RegisterActivity extends BaseActivity {
 
 
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
             focusView.requestFocus();
             return false;
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-//            showProgress(true);
-//            mAuthTask = new RegisterTask(username, tel, password);
-//            mAuthTask.execute((Void) null);
             return true;
         }
     }

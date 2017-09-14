@@ -73,10 +73,8 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
                 m_Dialog= ProgressDialog.show(FaceIdentify.this, "提示...", "请稍后...",true);
                 File dirFile = new File(Constant.Path);
                 //检测图片是否存在
-                System.out.println("AAAAAAAAAA");
                 if(dirFile.exists()){
                     dirFile.delete();  //删除原图片
-                    System.out.println("AAAAAAAAAABBBBBBBB");
                 }
                 mCamera.takePicture(null, null, pc);
                 SystemClock.sleep(2000);
@@ -228,7 +226,7 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
                     bMapRotate = Rotate.rotatingImageView(bMap);
                     BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(Constant.Path));
                     bMap = bMapRotate;
-                    bMap.compress(Bitmap.CompressFormat.JPEG, 50, bos);//将图片压缩到流中
+                    bMap.compress(Bitmap.CompressFormat.JPEG, 80, bos);//将图片压缩到流中
                     bos.write(data);
                     // 关闭流
                     bos.close();
