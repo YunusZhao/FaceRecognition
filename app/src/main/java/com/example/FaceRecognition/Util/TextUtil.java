@@ -1,5 +1,6 @@
 package com.example.FaceRecognition.Util;
 
+import java.io.File;
 import java.util.regex.Pattern;
 
 /**
@@ -34,5 +35,17 @@ public class TextUtil {
         // 创建 Pattern 对象
         Pattern p = Pattern.compile(reg);
         return p.matcher(password).matches();
+    }
+
+
+    /**
+     * 删除图片
+     */
+    public static void deleteFile() {
+        File dirFile = new File(Constant.Path);
+        //检测图片是否存在
+        if(dirFile.exists()){
+            dirFile.delete();  //删除原图片
+        }
     }
 }

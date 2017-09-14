@@ -21,6 +21,7 @@ import com.example.FaceRecognition.Util.CompressJPG;
 import com.example.FaceRecognition.Util.Constant;
 import com.example.FaceRecognition.Util.NetUtil;
 import com.example.FaceRecognition.Util.Rotate;
+import com.example.FaceRecognition.Util.TextUtil;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -71,11 +72,7 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.take_pic_btn:
                 m_Dialog= ProgressDialog.show(FaceIdentify.this, "提示...", "请稍后...",true);
-                File dirFile = new File(Constant.Path);
-                //检测图片是否存在
-                if(dirFile.exists()){
-                    dirFile.delete();  //删除原图片
-                }
+                TextUtil.deleteFile();
                 mCamera.takePicture(null, null, pc);
                 SystemClock.sleep(2000);
                 final Handler mHandler=new Handler();
@@ -135,6 +132,7 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
                                         Toast.makeText(FaceIdentify.this, "，登陆成功！", Toast.LENGTH_SHORT).show();
                                         Intent i = new Intent(FaceIdentify.this, PersonalActivity.class);
                                         startActivity(i);
+                                        TextUtil.deleteFile();
                                         finish();
                                         m_Dialog.dismiss();
                                         break;
@@ -149,12 +147,11 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
                         });
                         Intent i = new Intent(FaceIdentify.this, LoginActivity.class);
                         startActivity(i);
+                        TextUtil.deleteFile();
                         finish();
                         m_Dialog.dismiss();
                     }
                 }).start();
-
-
                 break;
         }
     }
