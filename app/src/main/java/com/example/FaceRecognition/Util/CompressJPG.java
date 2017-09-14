@@ -21,13 +21,9 @@ public class CompressJPG {
         // 得到图片的宽度、高度；
         float imgWidth = opts.outWidth;
         float imgHeight = opts.outHeight;
-//        targetWidth=(int) imgWidth;
-//        targetHeight=(int) imgHeight;
         // 分别计算图片宽度、高度与目标宽度、高度的比例；取大于等于该比例的最小整数；
         int widthRatio = (int) Math.ceil(imgWidth / (float) targetWidth);
         int heightRatio = (int) Math.ceil(imgHeight / (float) targetHeight);
-//        int widthRatio = 8;
-//        int heightRatio =8;
         opts.inSampleSize = 1;
         if (widthRatio > 1 || widthRatio > 1) {
             if (widthRatio > heightRatio) {

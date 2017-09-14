@@ -21,6 +21,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
+/**
+ * 并未实现功能，保留接口
+ */
 public class ForgetPasswordActivity extends BaseActivity implements NavigationView.OnClickListener {
     private static final String TAG = "ForgetPasswordActivity";
     private FindPwdTask mAuthTask = null;

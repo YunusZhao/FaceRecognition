@@ -23,6 +23,9 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.regex.Pattern;
 
+/**
+ * 并未实现功能，保留接口
+ */
 public class ResetPassword extends BaseActivity implements NavigationView.OnClickListener{
     private static final String TAG = "ResetPassword";
     private ResetPwdTask mAuthTask = null;

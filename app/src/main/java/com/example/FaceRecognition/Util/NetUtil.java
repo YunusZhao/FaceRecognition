@@ -1,7 +1,5 @@
 package com.example.FaceRecognition.Util;
 
-import android.util.Log;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -62,7 +60,7 @@ public class NetUtil {
             conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
             OutputStream out = new DataOutputStream(conn.getOutputStream());
 
-            //解析TextMap
+            //解析TextMap 保存到流中
             if (textMap != null) {
                 StringBuffer strBuf = new StringBuffer();
                 Iterator<Map.Entry<String, String>> iterator = textMap.entrySet().iterator();
@@ -81,7 +79,7 @@ public class NetUtil {
                 System.out.println(strBuf);
             }
 
-            // 解析file，
+            // 解析ImageFile，保存到流中
             if (fileMap != null) {
                 Iterator<Map.Entry<String, InputStream>> iterator = fileMap.entrySet().iterator();
                 while (iterator.hasNext()) {
@@ -158,7 +156,7 @@ public class NetUtil {
             if (urlConnection.getResponseCode() == 200) {
                 InputStream is = urlConnection.getInputStream();
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                int len = 0;
+                int len;
                 byte buffer[] = new byte[1024];
                 while ((len = is.read(buffer)) != -1) {
                     baos.write(buffer, 0, len);

@@ -20,8 +20,6 @@ public class Rotate {
         System.out.println("filepath:"+file.getAbsolutePath());
         int degree = Rotate.readPictureDegree(file.getAbsolutePath());
         System.out.println("degree:"+degree);
-        //Bitmap cameraBitmap = BitmapFactory.decodeFile(pathname, bitmapOptions);
-        //bitmap = cameraBitmap;
         /**
          * 把图片旋转为正的方法
          */

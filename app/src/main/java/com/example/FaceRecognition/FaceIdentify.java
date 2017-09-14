@@ -24,23 +24,10 @@ import com.example.FaceRecognition.Util.Rotate;
 import com.example.FaceRecognition.Util.TextUtil;
 
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 public class FaceIdentify extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "FaceIdentify";
@@ -120,16 +107,16 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
                             public void run() {
                                 switch (myFlag) {
                                     case 1 :
-                                        Toast.makeText(FaceIdentify.this, "，注册成功！", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(FaceIdentify.this, "注册成功！", Toast.LENGTH_SHORT).show();
                                         break;
                                     case 2 :
-                                        Toast.makeText(FaceIdentify.this, "，注册失败！", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(FaceIdentify.this, "注册失败！", Toast.LENGTH_SHORT).show();
                                         break;
                                     case 3 :
-                                        Toast.makeText(FaceIdentify.this, "，注册失败！文件未找到", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(FaceIdentify.this, "注册失败！文件未找到", Toast.LENGTH_SHORT).show();
                                         break;
                                     case 4 :
-                                        Toast.makeText(FaceIdentify.this, "，登陆成功！", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(FaceIdentify.this, "登陆成功！", Toast.LENGTH_SHORT).show();
                                         Intent i = new Intent(FaceIdentify.this, PersonalActivity.class);
                                         startActivity(i);
                                         TextUtil.deleteFile();
@@ -137,10 +124,10 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
                                         m_Dialog.dismiss();
                                         break;
                                     case 5 :
-                                        Toast.makeText(FaceIdentify.this, "，登陆失败！", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(FaceIdentify.this, "登陆失败！", Toast.LENGTH_SHORT).show();
                                         break;
                                     case 6 :
-                                        Toast.makeText(FaceIdentify.this, "，登陆失败！文件未找到", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(FaceIdentify.this, "登陆失败！文件未找到", Toast.LENGTH_SHORT).show();
                                         break;
                                 }
                             }
@@ -169,7 +156,7 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                android.hardware.Camera.Size bestSize = null;
+                android.hardware.Camera.Size bestSize;
                 Camera.Parameters parameters = mCamera.getParameters();
                 List<Camera.Size> sizeList = mCamera.getParameters().getSupportedPreviewSizes();
                 bestSize = sizeList.get(0);
@@ -191,7 +178,6 @@ public class FaceIdentify extends AppCompatActivity implements View.OnClickListe
                     public void onPreviewFrame(byte[] data, Camera camera) {
                         Log.i(TAG, "onPreviewFrame: " + data);
                         Log.i(TAG, "onPreviewFrame: " + camera);
-//                        new TakePictureCallback().onPictureTaken(date, camera);
                     }
                 });
             }
